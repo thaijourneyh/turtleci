@@ -1,4 +1,5 @@
 import { loadExportedPage, replaceInBody, replaceInHead, type ExportedPage } from "@/lib/webflow-export";
+import { renderPortableTextToHtml } from "@/lib/sanity/render-portable-text";
 
 export interface BlogPost {
   _id: string;
@@ -7,6 +8,7 @@ export interface BlogPost {
   seoTitle?: string;
   seoDescription?: string;
   thumbnailUrl?: string;
+  content?: unknown[];
   contentHtml: string;
   publishedAt?: string;
 }
@@ -99,6 +101,9 @@ export function renderBlogDetailPage(post: BlogPost): ExportedPage {
   const description = escapeHtml(post.seoDescription || "");
   const canonical = `https://www.turtleci.io/blogs/${post.slug}`;
   const dateLabel = formatDate(post.publishedAt);
+  const contentHtml = Array.isArray(post.content) && post.content.length > 0
+    ? renderPortableTextToHtml(post.content)
+    : post.contentHtml;
 
   page = replaceInHead(page, /<title><\/title>/, `<title>${title}</title>`);
   page = replaceInHead(page, /<meta content="" name="description">/, `<meta content="${description}" name="description">`);
@@ -123,7 +128,7 @@ export function renderBlogDetailPage(post: BlogPost): ExportedPage {
   page = replaceInBody(
     page,
     /<div class="text-rich-text w-dyn-bind-empty w-richtext"><\/div>/,
-    `<div class="text-rich-text w-richtext">${post.contentHtml}</div>`
+    `<div class="text-rich-text w-richtext">${contentHtml}</div>`
   );
 
   return page;

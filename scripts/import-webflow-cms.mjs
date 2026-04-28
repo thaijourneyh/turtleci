@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import Papa from "papaparse";
 import { createClient } from "@sanity/client";
+import { htmlToBlocks } from "@portabletext/block-tools";
+import { JSDOM } from "jsdom";
+import { Schema } from "@sanity/schema";
 
 const appRoot = process.cwd();
 const exportPath = process.env.WEBFLOW_CMS_DIR;
@@ -19,6 +22,34 @@ const client = createClient({
   token,
   useCdn: false
 });
+
+const compiledSchema = Schema.compile({
+  name: "turtleci",
+  types: [
+    {
+      type: "object",
+      name: "externalImage",
+      fields: [
+        { name: "url", type: "url" },
+        { name: "alt", type: "string" },
+        { name: "caption", type: "string" }
+      ]
+    },
+    {
+      type: "document",
+      name: "blogPost",
+      fields: [
+        {
+          name: "content",
+          type: "array",
+          of: [{ type: "block" }, { type: "externalImage" }]
+        }
+      ]
+    }
+  ]
+});
+
+const portableTextContentType = compiledSchema.get("blogPost").fields.find((field) => field.name === "content").type;
 
 function parseCsv(fileName) {
   const filePath = path.join(exportPath, fileName);
@@ -47,7 +78,36 @@ function normalizeSlug(value) {
     .replace(/^-|-$/g, "");
 }
 
+function parseHtml(html) {
+  return new JSDOM(`<body>${html}</body>`).window.document;
+}
+
+function htmlToPortableText(html) {
+  if (!html || !html.trim()) {
+    return [];
+  }
+
+  return htmlToBlocks(html, portableTextContentType, {
+    parseHtml,
+    matchers: {
+      image: ({ props, context }) => {
+        if (!props.src) {
+          return undefined;
+        }
+
+        return {
+          _type: "externalImage",
+          _key: context.keyGenerator(),
+          url: props.src,
+          alt: props.alt || ""
+        };
+      }
+    }
+  });
+}
+
 function toBlogDocument(row) {
+  const contentHtml = row.Content || "";
   return {
     _id: `blogPost.${row["Item ID"]}`,
     _type: "blogPost",
@@ -56,7 +116,8 @@ function toBlogDocument(row) {
     seoTitle: row["Title Tag"] || row.Name,
     seoDescription: row.Description,
     thumbnailUrl: row.Thumbnail || undefined,
-    contentHtml: row.Content || "",
+    content: htmlToPortableText(contentHtml),
+    contentHtml,
     publishedAt: parseDate(row["Published On"]),
     createdAt: parseDate(row["Created On"]),
     updatedAt: parseDate(row["Updated On"]),

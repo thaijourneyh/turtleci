@@ -14,14 +14,24 @@
     "build": "astro build",
     "preview": "astro preview",
     "import:webflow": "node --env-file=.env ./scripts/import-webflow-cms.mjs",
+    "migrate:portable-text": "node --env-file=.env ./scripts/migrate-portable-text.mjs",
     "sync:live-routes": "node --env-file=.env ./scripts/fetch-live-routes.mjs",
     "check:slugs": "node --env-file=.env ./scripts/check-blog-slugs.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^5.0.4",
+    "@portabletext/block-tools": "^5.1.1",
+    "@portabletext/to-html": "^5.0.2",
+    "@sanity/astro": "^3.3.1",
     "@sanity/client": "^7.0.0",
+    "@sanity/schema": "^5.22.0",
     "astro": "^5.18.1",
-    "papaparse": "^5.5.3"
+    "jsdom": "^29.1.0",
+    "papaparse": "^5.5.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "sanity": "^5.22.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

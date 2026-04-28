@@ -5,7 +5,8 @@ export const blogPostsQuery = `
     "slug": slug.current,
     seoTitle,
     seoDescription,
-    thumbnailUrl,
+    "thumbnailUrl": coalesce(thumbnail.asset->url, thumbnailUrl),
+    content,
     contentHtml,
     publishedAt
   }
@@ -18,7 +19,14 @@ export const blogPostBySlugQuery = `
     "slug": slug.current,
     seoTitle,
     seoDescription,
-    thumbnailUrl,
+    "thumbnailUrl": coalesce(thumbnail.asset->url, thumbnailUrl),
+    content[]{
+      ...,
+      _type == "image" => {
+        ...,
+        "url": asset->url
+      }
+    },
     contentHtml,
     publishedAt
   }
@@ -35,7 +43,7 @@ export const marqueeLogosQuery = `
     _id,
     name,
     "slug": slug.current,
-    logoUrl,
+    "logoUrl": coalesce(logo.asset->url, logoUrl),
     altText
   }
 `;

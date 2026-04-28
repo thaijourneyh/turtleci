@@ -17,6 +17,7 @@ npm install
 npm run check:build-env
 npm run dev
 npm run build
+npm run migrate:portable-text
 ```
 
 ## Environment variables
@@ -34,6 +35,29 @@ Import-only variables in `.env.import.example`:
 - `WEBFLOW_CMS_DIR`
 
 `SANITY_API_WRITE_TOKEN` is not required for production hosting.
+
+## Sanity Studio
+
+Sanity Studio is mounted at `/studio`.
+
+- Local Studio URL: `http://localhost:4321/studio`
+- Cloudflare Studio URL: `https://<your-pages-domain>/studio`
+
+To author blog posts:
+
+1. Open `/studio`
+2. Log into Sanity
+3. Open `Blog Post`
+4. Create or edit an entry
+5. Publish it
+
+Blog bodies now use Portable Text. Existing posts were migrated from legacy Webflow HTML into Portable Text, while the legacy `contentHtml` field is kept as hidden fallback data.
+
+For Studio access from local and Cloudflare, add these origins in Sanity project settings > API > CORS:
+
+- `http://localhost:4321`
+- `https://turtleci-git.pages.dev`
+- your final production domain when cutover happens
 
 ## Deployment docs
 
