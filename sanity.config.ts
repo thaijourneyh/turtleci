@@ -8,6 +8,7 @@ const dataset = process.env.PUBLIC_SANITY_DATASET || "production";
 export default defineConfig({
   name: "turtleci",
   title: "TurtleCI Content Studio",
+  basePath: "/studio",
   projectId,
   dataset,
   plugins: [structureTool()],
