@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const exportRoot = "/Users/thaitran/Downloads/JH Codex/turtleci.webflow";
+const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+const exportRoot = path.resolve(moduleDir, "../../webflow-export");
 
 const routeMap: Record<string, string> = {
   "index.html": "/",
