@@ -1,0 +1,31 @@
+{
+  "name": "turtleci-astro",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22 <25"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "check:build-env": "node --env-file=.env ./scripts/check-env.mjs build",
+    "check:import-env": "node --env-file=.env ./scripts/check-env.mjs import",
+    "build": "astro build",
+    "preview": "astro preview",
+    "import:webflow": "node --env-file=.env ./scripts/import-webflow-cms.mjs",
+    "sync:live-routes": "node --env-file=.env ./scripts/fetch-live-routes.mjs",
+    "check:slugs": "node --env-file=.env ./scripts/check-blog-slugs.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@sanity/client": "^7.0.0",
+    "astro": "^5.18.1",
+    "papaparse": "^5.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/papaparse": "^5.3.15",
+    "typescript": "^5.7.2"
+  }
+}

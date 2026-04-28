@@ -1,0 +1,15 @@
+---
+import { renderMarqueeLogoCollection } from "@/lib/blog-render";
+import { sanityClient } from "@/lib/sanity/client";
+import { marqueeLogosQuery } from "@/lib/sanity/queries";
+import { getPageAttrs, loadExportedPage } from "@/lib/webflow-export";
+
+const logos = await sanityClient.fetch(marqueeLogosQuery);
+const page = renderMarqueeLogoCollection(loadExportedPage("features-turtleci.html"), logos);
+const attrs = getPageAttrs(page);
+---
+<!DOCTYPE html>
+<html lang={attrs.lang} data-wf-page={attrs.dataWfPage} data-wf-site={attrs.dataWfSite}>
+  <head><Fragment set:html={page.headHtml} /></head>
+  <body><Fragment set:html={page.bodyHtml} /></body>
+</html>

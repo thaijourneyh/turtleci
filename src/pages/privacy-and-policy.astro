@@ -1,0 +1,10 @@
+---
+import { getPageAttrs, loadExportedPage } from "@/lib/webflow-export";
+const page = loadExportedPage("privacy-and-policy.html");
+const attrs = getPageAttrs(page);
+---
+<!DOCTYPE html>
+<html lang={attrs.lang} data-wf-page={attrs.dataWfPage} data-wf-site={attrs.dataWfSite}>
+  <head><Fragment set:html={page.headHtml} /></head>
+  <body><Fragment set:html={page.bodyHtml} /></body>
+</html>

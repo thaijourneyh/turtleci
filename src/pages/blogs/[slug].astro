@@ -1,0 +1,26 @@
+---
+import { renderBlogDetailPage } from "@/lib/blog-render";
+import { sanityClient } from "@/lib/sanity/client";
+import { blogPostBySlugQuery, blogPostSlugsQuery } from "@/lib/sanity/queries";
+import { getPageAttrs } from "@/lib/webflow-export";
+
+export async function getStaticPaths() {
+  const slugs = await sanityClient.fetch<{ slug: string }[]>(blogPostSlugsQuery);
+  return slugs.map(({ slug }) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const post = slug ? await sanityClient.fetch(blogPostBySlugQuery, { slug }) : null;
+
+if (!post) {
+  throw new Error(`Missing blog post for slug: ${slug}`);
+}
+
+const page = renderBlogDetailPage(post);
+const attrs = getPageAttrs(page);
+---
+<!DOCTYPE html>
+<html lang={attrs.lang} data-wf-page={attrs.dataWfPage} data-wf-site={attrs.dataWfSite}>
+  <head><Fragment set:html={page.headHtml} /></head>
+  <body><Fragment set:html={page.bodyHtml} /></body>
+</html>

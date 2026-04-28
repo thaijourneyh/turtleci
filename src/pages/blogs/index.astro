@@ -1,0 +1,15 @@
+---
+import { sanityClient } from "@/lib/sanity/client";
+import { blogPostsQuery } from "@/lib/sanity/queries";
+import { renderBlogIndexPage } from "@/lib/blog-render";
+import { getPageAttrs } from "@/lib/webflow-export";
+
+const posts = await sanityClient.fetch(blogPostsQuery);
+const page = renderBlogIndexPage(posts);
+const attrs = getPageAttrs(page);
+---
+<!DOCTYPE html>
+<html lang={attrs.lang} data-wf-page={attrs.dataWfPage} data-wf-site={attrs.dataWfSite}>
+  <head><Fragment set:html={page.headHtml} /></head>
+  <body><Fragment set:html={page.bodyHtml} /></body>
+</html>
