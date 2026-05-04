@@ -15,6 +15,7 @@
     "preview": "astro preview",
     "import:webflow": "node --env-file=.env ./scripts/import-webflow-cms.mjs",
     "migrate:portable-text": "node --env-file=.env ./scripts/migrate-portable-text.mjs",
+    "migrate:webflow-assets": "node --env-file=.env ./scripts/migrate-webflow-assets.mjs",
     "sync:live-routes": "node --env-file=.env ./scripts/fetch-live-routes.mjs",
     "check:slugs": "node --env-file=.env ./scripts/check-blog-slugs.mjs"
   },

@@ -18,6 +18,7 @@ npm run check:build-env
 npm run dev
 npm run build
 npm run migrate:portable-text
+npm run migrate:webflow-assets
 ```
 
 ## Environment variables
@@ -52,6 +53,21 @@ To author blog posts:
 5. Publish it
 
 Blog bodies now use Portable Text. Existing posts were migrated from legacy Webflow HTML into Portable Text, while the legacy `contentHtml` field is kept as hidden fallback data.
+
+Legacy Webflow-hosted images can be migrated into Sanity assets with:
+
+```bash
+npm run migrate:webflow-assets
+```
+
+This uploads:
+
+- blog thumbnails
+- Portable Text inline images still pointing at Webflow URLs
+- marquee logos
+- carousel thumbnails
+
+The script keeps the legacy URL fields as fallback but patches the documents to prefer real Sanity image assets.
 
 For Studio access from local and Cloudflare, add these origins in Sanity project settings > API > CORS:
 
